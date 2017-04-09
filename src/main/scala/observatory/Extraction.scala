@@ -6,6 +6,10 @@ import java.util
 import scala.io.BufferedSource
 import java.util.HashMap
 
+import scala.collection.mutable.ListBuffer
+import scala.collection.{LinearSeq, mutable}
+import scala.math.BigDecimal
+
 /**
   * 1st milestone: data extraction
   */
@@ -18,13 +22,33 @@ object Extraction {
     * @return A sequence containing triplets (date, location, temperature)
     */
   def locateTemperatures(year: Int, stationsFile: String, temperaturesFile: String): Iterable[(LocalDate, Location, Double)] = {
-    val bufferedSource = openStationFile(stationsFile)
-    bufferedSource.close
-    return null
+    var finalSequence = new ListBuffer[(LocalDate, Location, Double)]()
+    val hashStations = hashStationFile(openStationFile(stationsFile))
+    val bufferedWeatherFile = openStationFile(temperaturesFile)
+
+    for (line <- bufferedWeatherFile.getLines()) {
+      val cols = line.split(",").map(_.trim)
+      val location = createLocation(hashStations, cols(0), cols(1))
+      if (location != null) {
+        val averageDegreeCelcius = fahrenheitToCelsius(cols(4).toDouble)
+        finalSequence += ((LocalDate.of(year, cols(2).toInt, cols(3).toInt), location, averageDegreeCelcius))
+      }
+    }
+
+    return finalSequence
   }
 
-  def openStationFile(stationsFile: String): BufferedSource = {
-    val bufferedSource = new BufferedSource(getClass.getResourceAsStream(stationsFile))
+  def createLocation(hashmap: util.HashMap[(String, String), (Double, Double)], key_1: String, key_2: String): Location = {
+    if (!hashmap.containsKey((key_1, key_2))) {
+      return null
+    } else {
+      val StationLocation = hashmap.get((key_1, key_2))
+      return Location(StationLocation._1, StationLocation._2)
+    }
+  }
+
+  def openStationFile(file: String): BufferedSource = {
+    val bufferedSource = new BufferedSource(getClass.getResourceAsStream(file))
     return bufferedSource
   }
 
@@ -40,6 +64,10 @@ object Extraction {
       bufferedSource.close()
     }
     return hashmap
+  }
+
+  def fahrenheitToCelsius(value: Double) : Double = {
+    return BigDecimal((value - 32) / 1.8).setScale(2, BigDecimal.RoundingMode.HALF_EVEN).toDouble
   }
 
   /**
