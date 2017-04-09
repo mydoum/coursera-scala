@@ -1,0 +1,1 @@
+http://alaska.epfl.ch/files/scala-capstone-data.zip

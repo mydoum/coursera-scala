@@ -1,6 +1,7 @@
 package observatory
 
 import java.time.LocalDate
+import scala.io.BufferedSource
 
 /**
   * 1st milestone: data extraction
@@ -14,7 +15,14 @@ object Extraction {
     * @return A sequence containing triplets (date, location, temperature)
     */
   def locateTemperatures(year: Int, stationsFile: String, temperaturesFile: String): Iterable[(LocalDate, Location, Double)] = {
-    ???
+    val bufferedSource = openStationFile(stationsFile)
+    bufferedSource.close
+    return null
+  }
+
+  def openStationFile(stationsFile: String): BufferedSource = {
+    val bufferedSource = new BufferedSource(getClass.getResourceAsStream(stationsFile))
+    return bufferedSource
   }
 
   /**
