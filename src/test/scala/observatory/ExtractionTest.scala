@@ -3,6 +3,7 @@ package observatory
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
+import scala.collection.JavaConversions._
 
 @RunWith(classOf[JUnitRunner])
 class ExtractionTest extends FunSuite {
@@ -11,19 +12,13 @@ class ExtractionTest extends FunSuite {
     if (bufferedSource == null) {
       fail("Cannot find the file")
     } else {
-      assert(bufferedSource.getLines.take(0) == ",94234,+49.083,-125.767")
+      assert(bufferedSource.getLines().next() == "007005,,,")
     }
-    /*
-      for (line <- bufferedSource.getLines) {
-        val cols = line.split(",").map(_.trim)
-        // do whatever you want with the columns here
-        for (col <- cols) {
-          print(col + ", ")
-        }
-        println()
-      }
-      bufferedSource.close()
-    }
-  }*/
+  }
+
+  test("Is the station hashmap well formed") {
+    val hashmap = Extraction.hashStationFile(Extraction.openStationFile("/stations.csv"))
+    assert(hashmap.get(("702031","26620"))._1 == 64.7)
+    assert(hashmap.get(("702031","26620"))._2 == -162.05)
   }
 }

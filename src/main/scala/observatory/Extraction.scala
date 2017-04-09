@@ -1,7 +1,10 @@
 package observatory
 
 import java.time.LocalDate
+import java.util
+
 import scala.io.BufferedSource
+import java.util.HashMap
 
 /**
   * 1st milestone: data extraction
@@ -23,6 +26,20 @@ object Extraction {
   def openStationFile(stationsFile: String): BufferedSource = {
     val bufferedSource = new BufferedSource(getClass.getResourceAsStream(stationsFile))
     return bufferedSource
+  }
+
+  def hashStationFile(bufferedSource: BufferedSource): HashMap[(String, String), (Double, Double)] = {
+    var hashmap = new util.HashMap[(String, String), (Double, Double)]()
+    for (line <- bufferedSource.getLines) {
+      val cols = line.split(",").map(_.trim)
+      if (cols.length < 4 || cols(2).isEmpty || cols(3).isEmpty) {
+      } else {
+        // do whatever you want with the columns here
+        hashmap.put((cols(0), cols(1)), (cols(2).toDouble, cols(3).toDouble))
+      }
+      bufferedSource.close()
+    }
+    return hashmap
   }
 
   /**
