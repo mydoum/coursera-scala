@@ -34,5 +34,11 @@ class ExtractionTest extends FunSuite {
     assert(sequence.head._1 == LocalDate.of(2015, 8, 11))
     assert(sequence.head._2 == Location(37.35, -78.433))
     assert(sequence.head._3 == 27.3)
+    sequence.foreach(println)
+  }
+
+  test("AverageWeatherLocation") {
+    val sequence = Extraction.locationYearlyAverageRecords(Extraction.locateTemperatures(2015, "/testStations_1.csv", "/testWeather_1.csv"))
+    sequence.foreach(println)
   }
 }
