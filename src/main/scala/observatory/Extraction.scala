@@ -7,7 +7,6 @@ import scala.io.BufferedSource
 import java.util.HashMap
 
 import scala.collection.mutable.ListBuffer
-import scala.collection.{LinearSeq, mutable}
 import scala.math.BigDecimal
 
 /**
@@ -35,7 +34,7 @@ object Extraction {
       }
     }
 
-    finalSequence
+    finalSequence.toSeq
   }
 
   def createLocation(hashmap: util.HashMap[(String, String), (Double, Double)], key_1: String, key_2: String): Location = {
@@ -76,30 +75,7 @@ object Extraction {
     * @return A sequence containing, for each location, the average temperature over the year.
     */
   def locationYearlyAverageRecords(records: Iterable[(LocalDate, Location, Double)]): Iterable[(Location, Double)] = {
-    val finalSequence = new ListBuffer[(Location, Double)]()
-    val it = records.iterator
-    if (it.hasNext) {
-      var tmp = it.next()
-      var average = tmp._3
-      var counter = 1
-      var location = tmp._2
-
-      while(it.hasNext) {
-        tmp = it.next()
-        if (tmp._2 == location) {
-          average += tmp._3
-          counter += 1
-        } else {
-          finalSequence += ((location, average / counter))
-          average = tmp._3
-          counter = 1
-          location = tmp._2
-        }
-      }
-      finalSequence += ((location, average / counter))
-    }
-
-    finalSequence
+    records.groupBy(_._2).mapValues(value => value.map(_._3).sum / value.size).toSeq
   }
 
 }
