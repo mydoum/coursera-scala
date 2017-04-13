@@ -21,7 +21,16 @@ object Main {
   /**
    * Exercise 2
    */
-    def balance(chars: List[Char]): Boolean = ???
+    def balance(chars: List[Char]): Boolean = {
+      def b(subChars: List[Char], op: Int): Boolean = {
+        if (op < 0) false
+        else if (subChars.isEmpty) op == 0
+        else if (subChars.head == '(')  b(subChars.tail, op + 1)
+        else if (subChars.head == ')')  b(subChars.tail, op - 1)
+        else b(subChars.tail, op)
+      }
+    b(chars, 0)
+  }
   
   /**
    * Exercise 3
