@@ -1,6 +1,8 @@
 
 import common._
 
+import scala.collection.mutable.ListBuffer
+
 package object scalashop {
 
   /** The value of every pixel is represented as a 32 bit integer. */
@@ -40,7 +42,19 @@ package object scalashop {
   /** Computes the blurred RGBA value of a single pixel of the input image. */
   def boxBlurKernel(src: Img, x: Int, y: Int, radius: Int): RGBA = {
     // TODO implement using while loops
-    ???
+    val r : ListBuffer[Int] = new ListBuffer()
+    val g : ListBuffer[Int] = new ListBuffer()
+    val b : ListBuffer[Int] = new ListBuffer()
+    val a : ListBuffer[Int] = new ListBuffer()
+    for (x1 <- x - radius to x + radius; y1 <- y - radius to y + radius) {
+      if (x1 == clamp(x1, 0, src.width) && y1 == clamp(y1, 0, src.height)) {
+        r += red(src.apply(x1, y1))
+        g += green(src.apply(x1, y1))
+        b += blue(src.apply(x1, y1))
+        a += alpha(src.apply(x1, y1))
+      }
+    }
+    rgba(r.sum / r.size, g.sum / g.size, b.sum / b.size , a.sum / a.size)
   }
 
 }
