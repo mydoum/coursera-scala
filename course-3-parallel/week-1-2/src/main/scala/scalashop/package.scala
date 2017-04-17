@@ -47,7 +47,7 @@ package object scalashop {
     val b : ListBuffer[Int] = new ListBuffer()
     val a : ListBuffer[Int] = new ListBuffer()
     for (x1 <- x - radius to x + radius; y1 <- y - radius to y + radius) {
-      if (x1 == clamp(x1, 0, src.width) && y1 == clamp(y1, 0, src.height)) {
+      if (x1 == clamp(x1, 0, src.width - 1) && y1 == clamp(y1, 0, src.height - 1)) {
         r += red(src.apply(x1, y1))
         g += green(src.apply(x1, y1))
         b += blue(src.apply(x1, y1))
