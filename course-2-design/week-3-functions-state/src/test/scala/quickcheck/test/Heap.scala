@@ -69,6 +69,7 @@ trait Bogus3BinomialHeap extends BinomialHeap {
 }
 
 trait Bogus4BinomialHeap extends BinomialHeap {
+  //only work when the min is in the first node of the heap
   override def deleteMin(ts: H) = ts match {
     case Nil => throw new NoSuchElementException("delete min of empty heap")
     case t::ts => meld(t.c.reverse, ts)
